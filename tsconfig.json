@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    /* Project Setup */
+    "target": "es2016",                                   /* Set the ECMAScript target version for emitted JavaScript. */
+    "module": "commonjs",                                 /* Specify the module system (CommonJS in this case). */
+    "rootDir": "./src",                                   /* Define the root folder for source files. */
+    "outDir": "./dist",                                   /* Define the output directory for compiled files. */
+    "esModuleInterop": true,                              /* Enable compatibility with CommonJS modules. */
+    "forceConsistentCasingInFileNames": true,             /* Ensure consistent file name casing. */
+    "strict": true,                                       /* Enable all strict type-checking options. */
+    "skipLibCheck": true                                  /* Skip type checking for declaration files. */
+
+    /* Uncomment the options below as needed */
+    // "incremental": true,                               /* Enable incremental compilation. */
+    // "composite": true,                                 /* Enable composite projects for project references. */
+    // "tsBuildInfoFile": "./.tsbuildinfo",               /* Define the path for the .tsbuildinfo file. */
+    // "jsx": "preserve",                                 /* Control JSX code generation (for React). */
+    // "experimentalDecorators": true,                    /* Enable experimental decorators. */
+    // "emitDecoratorMetadata": true,                     /* Emit metadata for decorators. */
+    // "resolveJsonModule": true,                         /* Enable importing JSON files. */
+    // "allowJs": true,                                   /* Allow JavaScript files to be part of the project. */
+    // "sourceMap": true,                                 /* Generate source map files for debugging. */
+    // "noImplicitAny": true,                             /* Raise an error for expressions with an implied 'any' type. */
+    // "strictNullChecks": true,                          /* Enable strict null checks. */
+    // "noImplicitReturns": true,                         /* Raise an error for functions without explicit return values. */
+    // "noFallthroughCasesInSwitch": true,                /* Raise an error for switch case fallthroughs. */
+  }
+}

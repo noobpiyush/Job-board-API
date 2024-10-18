@@ -1,0 +1,27 @@
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+
+# TypeScript specific
+*.tsbuildinfo
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# MacOS files
+.DS_Store
+
+# VS Code settings (if using Visual Studio Code)
+.vscode/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Temporary files
+*.tmp
