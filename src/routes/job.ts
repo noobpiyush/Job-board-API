@@ -19,6 +19,9 @@ jobRouter.get("/job-health", async (req, res) => {
 jobRouter.post("/post", authMiddleware, async (req, res) => {
   try {
     const result = JobPostingBody.safeParse(req.body);
+    console.log(result);
+    console.log(req.body);
+    
     if (!result.success) {
       res.status(400).json({
         error: "Validation failed",
@@ -29,36 +32,39 @@ jobRouter.post("/post", authMiddleware, async (req, res) => {
 
     const { jobTitle, jobDescription, experienceLevel, candidates, endDate } = result.data;
 
-    // @ts-ignore (assuming req.user is added by the authenticateToken middleware)
-    const userId = req.user.userId;
+    // Convert endDate to a Date object
+    const endDateObject = new Date(endDate);
 
-    const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
+    // Check if endDate is a valid date
+    if (isNaN(endDateObject.getTime())) {
+      res.status(400).json({ error: "Invalid end date" });
       return;
     }
 
-    if (!user.isVerified) {
-      res.status(403).json({ message: "Please verify your account to post jobs" });
-      return;
-    }
-
-    const newJob = new JobPosting({
-      company: userId,
+    const jobPosting = await JobPosting.create({
       jobTitle,
       jobDescription,
       experienceLevel,
-      candidates: candidates || [],
-      endDate: new Date(endDate),
+      candidates,
+      endDate: endDateObject, // Save as a Date object
     });
-
-    await newJob.save();
 
     let emailResults: EmailResult[] = [];
     let allEmailsSent = true;
+    if (!req.user) {
+     res.status(401).json({ message: "Unauthorized" });
+     return;
+    }
 
-    // Send emails to candidates
+    // Send emails to candidates if any are provided
     if (candidates && candidates.length > 0) {
+     
+      const user = await User.findById(req.user.userId); // Assuming req.user contains user details from authMiddleware
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
       const emailPromises = candidates.map(async (candidateEmail) => {
         const from = process.env.MAIL_USERNAME!;
         const subject = `New Job Opportunity from ${user.companyName}`;
@@ -89,14 +95,11 @@ jobRouter.post("/post", authMiddleware, async (req, res) => {
           ? "Job posted successfully and emails sent to all candidates"
           : "Job posted successfully, but some emails failed to send")
         : "Job posted successfully",
-      jobId: newJob._id,
+      jobPosting,
       emailResults: emailResults.length > 0 ? emailResults : undefined,
     });
-    return;
   } catch (error) {
-    console.error("Job posting error:", error);
-    res.status(500).json({
-      error: "Internal server error",
-    });
+    console.error("Error posting job:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });

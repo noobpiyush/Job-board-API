@@ -15,36 +15,28 @@ export const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1] // Extract the token from the header
+    : null;
 
-  if (!token) {
-    res
-      .status(401)
-      .json({ message: "No token provided, authorization denied" });
-    return;
-  }
+    if (token === null) {
+      res.status(400).json("plese login")
+      return 
+    }
 
   try {
     // Verify the token and decode the payload
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
-    // Attach the decoded token to req.user
+
     req.user = decoded;
 
     console.log(req.user);
     
-
     res.locals.companyEmail = req.user.email;
-
-
+    console.log(req.user.email);
     
-
-    console.log("res.locals.email is ", res.locals.companyEmail);
-
-    // Now you can access the email from req.user.email
-    console.log("Extracted Email:", req.user.email);
-
-    // Proceed to the next middleware/route handler
     next();
   } catch (err) {
     res.status(403).json({ message: "Invalid token" });
