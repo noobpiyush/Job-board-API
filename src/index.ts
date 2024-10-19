@@ -12,7 +12,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(cors({
-    origin: "https://job-portal-two-gray.vercel.app", // No trailing slash
+    origin: "https://job-board-client.netlify.app", // No trailing slash
     credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 }));
 
